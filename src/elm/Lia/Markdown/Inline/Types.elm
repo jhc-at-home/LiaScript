@@ -7,7 +7,7 @@ module Lia.Markdown.Inline.Types exposing
     )
 
 import Dict exposing (Dict)
-import Html.Parser
+
 
 
 type alias Inlines =
@@ -21,7 +21,6 @@ type alias MultInlines =
 type alias Annotation =
     Maybe (Dict String String)
 
-
 type Inline
     = Chars String Annotation
     | Symbol String Annotation
@@ -34,7 +33,6 @@ type Inline
     | Formula String String Annotation
     | Ref Reference Annotation
     | FootnoteMark String Annotation
-    | HTML (List Html.Parser.Node)
     | EInline Int Int Inlines Annotation
     | Container Inlines Annotation
 

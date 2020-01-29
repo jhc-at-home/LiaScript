@@ -6,7 +6,11 @@ import Html.Attributes as Attr
 import Html.Parser.Util as Util
 import Lia.Markdown.Effect.View as Effect
 import Lia.Markdown.Footnote.View as Footnote
-import Lia.Markdown.Inline.Types exposing (Annotation, Inline(..), Inlines, Reference(..))
+import Lia.Markdown.Inline.Types exposing (Annotation
+                                          , HtmlNode(..)
+                                          , Inline(..)
+                                          , Inlines
+                                          , Reference(..))
 import Lia.Settings.Model exposing (Mode(..))
 
 
@@ -95,7 +99,7 @@ view mode visible element =
 
         HTML nodes ->
             nodes
-                |> Util.toVirtualDom
+                |> renderHtml (view mode visible)
                 |> Html.span []
 
         EInline id_in id_out e attr ->
@@ -142,6 +146,28 @@ view_inf : Mode -> Inline -> Html msg
 view_inf mode =
     view mode 99999
 
+
+renderHtml : (Inline -> Html msg) -> List HtmlNode -> List (Html msg)
+renderHtml viewNode ns =
+    let
+        renderNode : HtmlNode -> Html msg
+        renderNode n =
+            case n of
+                Text il ->
+                    viewNode il
+                
+                Element name attrs children ->
+                    Html.node name (List.map renderAttr attrs) (renderHtml viewNode children)
+
+                Comment ->
+                    Html.text ""
+                
+
+        renderAttr : (String, String) -> Html.Attribute msg
+        renderAttr ( name, value ) =
+            Attr.attribute name value
+    in
+        List.map renderNode ns
 
 reference : Mode -> Int -> Reference -> Annotation -> Html msg
 reference mode visible ref attr =

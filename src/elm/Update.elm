@@ -263,11 +263,12 @@ parsing model =
             case model.code of
                 Nothing ->
                     parsing { model | state = Parsing False templates_to_load }
+                        |> Debug.log "Code is nothing"
 
                 Just code ->
                     let
-                        ( lia, remaining_code ) =
-                            Lia.Script.parse_section model.lia code
+                        ( lia, remaining_code ) = 
+                            Lia.Script.parse_section model.lia (Debug.log "Code" code) 
 
                         new_model =
                             { model | lia = lia, code = remaining_code }

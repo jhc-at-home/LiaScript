@@ -25,8 +25,8 @@ debug log p =
                             withState
                                 (\ss ->
                                     let
-                                        output =
-                                            --  Debug.log log
+                                        _ =
+                                           Debug.log log
                                             ( y
                                             , x
                                             , String.slice 0 x s

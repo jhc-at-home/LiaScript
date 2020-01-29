@@ -43,6 +43,8 @@ import Lia.Parser.Context
 import Lia.Parser.Helper exposing (newline, stringTill)
 import Lia.Settings.Model exposing (Mode(..))
 
+import Debug
+
 
 parse : Parser Context ()
 parse =
@@ -63,7 +65,7 @@ inline_parser defines str =
             |> Combine.runParser (many1 inlines) (init identity defines)
     of
         Ok ( _, _, rslt ) ->
-            rslt
+            Debug.log "inline_parser" rslt
 
         Err _ ->
             []
