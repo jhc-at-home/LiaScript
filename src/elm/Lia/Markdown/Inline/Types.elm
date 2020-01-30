@@ -7,8 +7,7 @@ module Lia.Markdown.Inline.Types exposing
     )
 
 import Dict exposing (Dict)
-
-
+import Lia.Markdown.Html.Types exposing (HtmlNode)
 
 type alias Inlines =
     List Inline
@@ -35,6 +34,7 @@ type Inline
     | FootnoteMark String Annotation
     | EInline Int Int Inlines Annotation
     | Container Inlines Annotation
+    | InlineHtml (List (HtmlNode Inline))
 
 
 type Reference

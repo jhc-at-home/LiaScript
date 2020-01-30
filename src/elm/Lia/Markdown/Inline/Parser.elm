@@ -44,6 +44,7 @@ import Lia.Definition.Types exposing (default)
 import Lia.Markdown.Effect.Model exposing (add_javascript)
 import Lia.Markdown.Effect.Parser as Effect
 import Lia.Markdown.Footnote.Parser as Footnote
+import Lia.Markdown.Html.Types exposing (HtmlNode(..))
 import Lia.Markdown.Inline.Multimedia as Multimedia
 import Lia.Markdown.Inline.Parser.Formula exposing (formula)
 import Lia.Markdown.Inline.Parser.Symbol exposing (arrows, smileys)
@@ -160,22 +161,21 @@ html_void : Parser Context Inline
 html_void =
     regex "<[^>\\n]*>"
         |> andThen html_parse
-        |> map HTML
+        |> map InlineHtml
 
 
-inner_html : List Html.Parser.Node -> List HtmlNode
+inner_html : List Html.Parser.Node -> List (HtmlNode Inline)
 inner_html ns =
     let
         ctx : Context
         ctx =
             Lia.Parser.Context.init identity (default "")
             
-        convertNode : Html.Parser.Node -> HtmlNode
+        convertNode : Html.Parser.Node -> HtmlNode Inline
         convertNode n =
             case n of
                 Html.Parser.Text str ->
-                    -- Text (toContainer (parse_inlines ctx str))
-                    (parse_inlines ctx str) |> toContainer |> Text
+                    parse_inlines ctx str |> toContainer |> Text
 
                 Html.Parser.Element name attrs nodes ->
                     Element name attrs (List.map convertNode nodes)
@@ -186,7 +186,7 @@ inner_html ns =
     List.map convertNode ns
 
 
-html_parse : String -> Parser Context (List HtmlNode)
+html_parse : String -> Parser Context (List (HtmlNode Inline))
 html_parse str =
     case Html.Parser.run str of
         Ok rslt ->
@@ -200,7 +200,7 @@ html_block : Parser Context Inline
 html_block =
     regex "<((\\w+|-)+)[\\s\\S]*?</\\1>"
         |> andThen html_parse
-        |> map HTML
+        |> map InlineHtml
 
 
 combine : Inlines -> Inlines

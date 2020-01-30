@@ -3,11 +3,10 @@ module Lia.Markdown.Inline.View exposing (annotation, attributes, reference, vie
 import Dict
 import Html exposing (Attribute, Html)
 import Html.Attributes as Attr
-import Html.Parser.Util as Util
 import Lia.Markdown.Effect.View as Effect
 import Lia.Markdown.Footnote.View as Footnote
+import Lia.Markdown.Html.Types exposing (HtmlNode(..))
 import Lia.Markdown.Inline.Types exposing (Annotation
-                                          , HtmlNode(..)
                                           , Inline(..)
                                           , Inlines
                                           , Reference(..))
@@ -97,7 +96,7 @@ view mode visible element =
                 |> List.map (\e -> view mode visible e)
                 |> Html.span (annotation "lia-container" attr)
 
-        HTML nodes ->
+        InlineHtml nodes ->
             nodes
                 |> renderHtml (view mode visible)
                 |> Html.span []
@@ -147,10 +146,10 @@ view_inf mode =
     view mode 99999
 
 
-renderHtml : (Inline -> Html msg) -> List HtmlNode -> List (Html msg)
+renderHtml : (Inline -> Html msg) -> List (HtmlNode Inline) -> List (Html msg)
 renderHtml viewNode ns =
     let
-        renderNode : HtmlNode -> Html msg
+        renderNode : HtmlNode Inline -> Html msg
         renderNode n =
             case n of
                 Text il ->
