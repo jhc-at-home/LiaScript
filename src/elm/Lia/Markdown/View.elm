@@ -9,6 +9,7 @@ import Lia.Markdown.Code.View as Codes
 import Lia.Markdown.Effect.Model as Comments
 import Lia.Markdown.Footnote.Model as Footnotes
 import Lia.Markdown.Footnote.View as Footnote
+import Lia.Markdown.Html.Html exposing (renderHtml)
 import Lia.Markdown.Inline.Types exposing (Annotation, Inlines, MultInlines)
 import Lia.Markdown.Inline.View exposing (annotation, attributes, viewer)
 import Lia.Markdown.Quiz.View as Quizzes
@@ -265,6 +266,9 @@ view_block config block =
                                 ]
                                 [ svg ]
                    )
+        Html _ _ _ ->
+            -- [renderHtml (view_block config) md]
+            Html.p [] [Html.text "Placeholder"]
 
 
 viewCircle : Int -> Html msg

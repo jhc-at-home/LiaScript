@@ -6,6 +6,7 @@ import Combine
         , andMap
         , andThen
         , choice
+        , fail
         , ignore
         , keep
         , lazy
@@ -26,11 +27,14 @@ import Combine
         , withState
         )
 import Dict
+import Html.Parser
 import Lia.Markdown.Chart.Parser as Chart
 import Lia.Markdown.Code.Parser as Code
 import Lia.Markdown.Effect.Model exposing (set_annotation)
 import Lia.Markdown.Effect.Parser as Effect
 import Lia.Markdown.Footnote.Parser as Footnote
+import Lia.Markdown.Html.Html exposing (parseHtml, unify)
+import Lia.Markdown.Html.Types exposing (HtmlNode(..))
 import Lia.Markdown.Inline.Parser exposing (attribute, combine, comment, line)
 import Lia.Markdown.Inline.Types exposing (Annotation, Inlines, MultInlines)
 import Lia.Markdown.Macro.Parser exposing (macro)
@@ -77,6 +81,7 @@ blocks =
                         , formated_table
                         , simple_table
                         , svgbob
+                        -- , html
                         , md_annotations
                             |> map Code
                             |> andMap Code.parse
@@ -291,6 +296,26 @@ quote =
             )
         |> ignore indentation_pop
 
+
+-- html : Parser Context Markdown
+-- html =
+--     regex "<((\\w+|-)+)[\\s\\S]*?</\\1>"
+--     |> andThen htmlBlock
+--     |> map Html
+--     let
+--         convertNode : Html.Parser.Node -> HtmlNode Markdown
+--         convertNode n =
+--             case n of
+--                 Html.Parser.Text str
+        
+--         html_block : List Html.Parser.Node -> List (HtmlNode Markdown)
+--         html_block ns =
+--             List.map convertNode ns
+--     in
+--     indentation_skip
+--         |> regex "<((\\w+|-)+)[\\s\\S]*?</\\1>"
+--         |> andThen (parseHtml html_block)
+--         |> map Html
 
 md_annotations : Parser Context Annotation
 md_annotations =

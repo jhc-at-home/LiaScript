@@ -81,7 +81,7 @@ encInline element =
                 , ( "a", encAnnotation a )
                 ]
 
-            HTML str ->
+            InlineHtml _ ->
                 [ ( "HTML", JE.string "" )
                 , ( "a", encAnnotation Nothing )
                 ]

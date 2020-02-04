@@ -34,7 +34,7 @@ type Inline
     | FootnoteMark String Annotation
     | EInline Int Int Inlines Annotation
     | Container Inlines Annotation
-    | InlineHtml (List (HtmlNode Inline))
+    | InlineHtml Inlines Annotation --(List (HtmlNode Inline))
 
 
 type Reference

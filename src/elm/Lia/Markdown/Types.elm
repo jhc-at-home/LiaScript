@@ -2,12 +2,10 @@ module Lia.Markdown.Types exposing (Markdown(..), MarkdownS)
 
 import Lia.Markdown.Chart.Types exposing (Chart)
 import Lia.Markdown.Code.Types exposing (Code)
+import Lia.Markdown.Html.Types exposing (HtmlNode)
 import Lia.Markdown.Inline.Types exposing (Annotation, Inlines, MultInlines)
 import Lia.Markdown.Quiz.Types exposing (Quiz)
 import Lia.Markdown.Survey.Types exposing (Survey)
-
-import Html.Parser
-
 
 type Markdown
     = HLine Annotation
@@ -23,12 +21,8 @@ type Markdown
     | Chart Annotation Chart
     | Code Annotation Code
     | ASCII Annotation String
-    | HTML Annotation (List Html)
+    | Html String Annotation Markdown
 
 
 type alias MarkdownS =
     List Markdown
-
-type Html
-    = Text Markdown
-    | Element String (List Html.Parser.Attribute) (List Html)
